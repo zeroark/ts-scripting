@@ -8,11 +8,13 @@
 //:://////////////////////////////////////////////
 //:: Created By: Preston Watamaniuk
 //:: Created On: Jan 12, 2001
+//:: Modified by: Shayan   27/03/2005 (For Subrace Engine)
 //:://////////////////////////////////////////////
 //:: Update Pass By: Preston W, On: Aug 1, 2001
 
 #include "NW_I0_SPELLS"
 #include "x2_inc_spellhook"
+#include "sha_subr_methds"
 
 void main()
 {
@@ -41,9 +43,10 @@ void main()
   effect eSun = EffectVisualEffect(VFX_IMP_SUNSTRIKE);
   effect eHealVis = EffectVisualEffect(VFX_IMP_HEALING_X);
     //Check to see if the target is an undead
-    if (GetRacialType(oTarget) == RACIAL_TYPE_UNDEAD)
+  int IsUndead = Subrace_GetIsUndead(oTarget);
+    if (GetRacialType(oTarget) == RACIAL_TYPE_UNDEAD || IsUndead)
     {
-        if(!GetIsReactionTypeFriendly(oTarget))
+        if(!GetIsReactionTypeFriendly(oTarget) || IsUndead)
         {
             //Fire cast spell at event for the specified target
             SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELL_HEAL));

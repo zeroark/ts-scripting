@@ -12,7 +12,7 @@
 //:: Created On: Feb 28, 2002
 //:://////////////////////////////////////////////
 #include "X0_I0_SPELLS"
-
+#include "sha_subr_methds"
 #include "x2_inc_spellhook"
 
 void main()
@@ -20,11 +20,14 @@ void main()
 
     object oTarget = GetExitingObject();
     object oCreator = GetAreaOfEffectCreator();
-
+//Shayan's Subrace Engine
+    SetIsInDarkness(oTarget, FALSE);
+//End
     int bValid = FALSE;
     effect eAOE;
     //Search through the valid effects on the target.
     eAOE = GetFirstEffect(oTarget);
+
     while (GetIsEffectValid(eAOE))
     {
         if (GetEffectCreator(eAOE) == oCreator)

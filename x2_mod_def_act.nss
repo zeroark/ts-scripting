@@ -10,12 +10,15 @@
 //:://////////////////////////////////////////////
 //:: Created By: Georg Zoeller
 //:: Created On: 2003-07-16
+//:: Modified by: Shayan 28/06/05 - line 21.
 //:://////////////////////////////////////////////
 
 #include "x2_inc_switches"
 void main()
 {
      object oItem = GetItemActivated();
+
+     ExecuteScript("sha_on_itemactiv", GetModule());
 
      // * Generic Item Script Execution Code
      // * If MODULE_SWITCH_EXECUTE_TAGBASED_SCRIPTS is set to TRUE on the module,
@@ -32,5 +35,4 @@ void main()
         }
 
      }
-
 }

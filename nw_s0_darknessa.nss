@@ -12,7 +12,7 @@
 //:: Created On: Feb 28, 2002
 //:://////////////////////////////////////////////
 #include "x0_i0_spells"
-
+#include "sha_subr_methds"
 #include "x2_inc_spellhook"
 
 void main()
@@ -33,7 +33,11 @@ void main()
         nDuration = nDuration *2; //Duration is +100%
     }
     object oTarget = GetEnteringObject();
-
+//--//Shayan's Subrace Engine
+    SetIsInDarkness(oTarget, TRUE);
+    //fail safe code
+    DelayCommand(220.0, SetIsInDarkness(oTarget, FALSE));
+//End
     // * July 2003: If has darkness then do not put it on it again
     if (GetHasEffect(EFFECT_TYPE_DARKNESS, oTarget) == TRUE)
     {

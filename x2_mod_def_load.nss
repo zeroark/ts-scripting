@@ -38,6 +38,19 @@
 #include "x2_inc_restsys"
 void main()
 {
+
+//Optional --- Support for NWNX added for Shayan's Subraces. (Remember to setup and import the neccessary files
+//              for NWNX. The scripts are not included in the Subraces package).
+   //ExecuteScript("aps_onload", GetModule());
+
+//--End NWNX
+SetLocalString(GetModule(), "NWNX!INIT", "1");
+
+//----Modification for Shayan's Subrace Engine
+   DelayCommand(2.0, ExecuteScript("sha_on_modload", GetModule()));
+//----End Modification.
+
+
    if (GetGameDifficulty() ==  GAME_DIFFICULTY_CORE_RULES || GetGameDifficulty() ==  GAME_DIFFICULTY_DIFFICULT)
    {
         // * Setting the switch below will enable a seperate Use Magic Device Skillcheck for

@@ -12,10 +12,11 @@
 //:: Created By: Preston Watamaniuk
 //:: Created On: Nov 2, 2001
 //:: Updated On: Jul 15, 2003 - Georg Zoeller
+//:: Modified by: Shayan 20/04/2005
 //:://////////////////////////////////////////////
 //:: MODIFIED MARCH 5 2003 for Blackguards
 //:: MODIFIED JULY 24 2003 for Planar Turning to include turn resistance hd
-
+#include "sha_subr_methds"
 void main()
 {
     int nClericLevel = GetLevelByClass(CLASS_TYPE_CLERIC);
@@ -124,8 +125,15 @@ void main()
         if(!GetIsFriend(oTarget))
         {
             nRacial = GetRacialType(oTarget);
-
-
+//---------Modified for Shayan's Subrace Engine------------//
+            if(GetIsPC(oTarget))
+            {
+               if(Subrace_GetIsUndead(oTarget))
+               {
+                 nRacial == RACIAL_TYPE_UNDEAD;
+               }
+            }
+//--------------------------End----------------------------//
             if (nRacial == RACIAL_TYPE_OUTSIDER )
             {
                 if (nPlanar)

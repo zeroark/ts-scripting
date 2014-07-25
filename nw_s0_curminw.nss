@@ -10,6 +10,7 @@
 //:://////////////////////////////////////////////
 //:: Created By: Noel Borstad
 //:: Created On: Oct 18, 2000
+//:: Modified by: Shayan   27/03/2005 (For Subrace Engine) -Just recompiled with modified nw_i0_spells.nss
 //:://////////////////////////////////////////////
 //:: Last Updated By: Preston Watamaniuk, On: Feb 22, 2001
 //:: Last Updated By: Preston Watamaniuk, On: April 6, 2001

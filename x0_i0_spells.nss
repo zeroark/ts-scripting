@@ -24,6 +24,9 @@
 //::                          Added code to handleldispeling of AoE spells better
 //::                          Henchmen are booted from the party when petrified
 //::                          Dispel Magic delay until VFX hit has been set down to 0.3
+//::
+//:: Updated On: August 2006, Shayan:
+//::                          Changed Lines 37, 598 For SSE.
 //:://////////////////////////////////////////////
 
 #include "NW_I0_SPELLS"
@@ -31,6 +34,7 @@
 #include "x2_inc_switches"
 #include "x2_inc_itemprop"
 #include "x0_i0_henchman"
+#include "sha_subr_methds"
 
 // * Constants
 // * see spellsIsTarget for a definition of these constants
@@ -595,7 +599,7 @@ void spellsInflictTouchAttack(int nDamage, int nMaxExtraDamage, int nMaximized, 
 
 
     //Check that the target is undead
-    if (GetRacialType(oTarget) == RACIAL_TYPE_UNDEAD)
+    if (GetRacialType(oTarget) == RACIAL_TYPE_UNDEAD || Subrace_GetIsUndead(oTarget))
     {
         effect eVis2 = EffectVisualEffect(vfx_impactHeal);
         //Figure out the amount of damage to heal
@@ -686,10 +690,7 @@ void DoMissileStorm(int nD6Dice, int nCap, int nSpell, int nMIRV = VFX_IMP_MIRV,
         if (spellsIsTarget(oTarget, SPELL_TARGET_SELECTIVEHOSTILE, OBJECT_SELF) && (oTarget != OBJECT_SELF))
         {
             // GZ: You can only fire missiles on visible targets
-            // If the firing object is a placeable (such as a projectile trap),
-            // we skip the line of sight check as placeables can't "see" things.
-            if ( ( GetObjectType(OBJECT_SELF) == OBJECT_TYPE_PLACEABLE ) ||
-                   GetObjectSeen(oTarget,OBJECT_SELF))
+            if (GetObjectSeen(oTarget,OBJECT_SELF))
             {
                 nEnemies++;
             }
@@ -722,10 +723,7 @@ void DoMissileStorm(int nD6Dice, int nCap, int nSpell, int nMIRV = VFX_IMP_MIRV,
     while (GetIsObjectValid(oTarget) && nCnt <= nEnemies)
     {
         // * caster cannot be harmed by this spell
-        if (spellsIsTarget(oTarget, SPELL_TARGET_SELECTIVEHOSTILE, OBJECT_SELF) &&
-           (oTarget != OBJECT_SELF) &&
-           (( GetObjectType(OBJECT_SELF) == OBJECT_TYPE_PLACEABLE ) ||
-           (GetObjectSeen(oTarget,OBJECT_SELF))))
+        if (spellsIsTarget(oTarget, SPELL_TARGET_SELECTIVEHOSTILE, OBJECT_SELF) && (oTarget != OBJECT_SELF) && (GetObjectSeen(oTarget,OBJECT_SELF)))
         {
                 //Fire cast spell at event for the specified target
                 SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, nSpell));
@@ -940,7 +938,6 @@ int CanCreatureBeDestroyed(object oTarget)
 }
 
 //*GZ: 2003-07-23. honor critical and weapon spec
-// Updated: 02/14/2008 CraigW - Added support for Epic Weapon Specialization.
 // nCrit -
 
 int ArcaneArcherDamageDoneByBow(int bCrit = FALSE, object oUser = OBJECT_SELF)
@@ -948,7 +945,6 @@ int ArcaneArcherDamageDoneByBow(int bCrit = FALSE, object oUser = OBJECT_SELF)
     object oItem = GetItemInSlot(INVENTORY_SLOT_RIGHTHAND);
     int nDamage;
     int bSpec = FALSE;
-    int bEpicSpecialization = FALSE;
 
     if (GetIsObjectValid(oItem) == TRUE)
     {
@@ -959,10 +955,6 @@ int ArcaneArcherDamageDoneByBow(int bCrit = FALSE, object oUser = OBJECT_SELF)
             {
               bSpec = TRUE;
             }
-            if (GetHasFeat(FEAT_EPIC_WEAPON_SPECIALIZATION_LONGBOW,oUser))
-            {
-              bEpicSpecialization = TRUE;
-            }
         }
         else
         if (GetBaseItemType(oItem) == BASE_ITEM_SHORTBOW)
@@ -971,10 +963,6 @@ int ArcaneArcherDamageDoneByBow(int bCrit = FALSE, object oUser = OBJECT_SELF)
             if (GetHasFeat(FEAT_WEAPON_SPECIALIZATION_SHORTBOW,oUser))
             {
               bSpec = TRUE;
-            }
-            if (GetHasFeat(FEAT_EPIC_WEAPON_SPECIALIZATION_SHORTBOW,oUser))
-            {
-              bEpicSpecialization = TRUE;
             }
         }
         else
@@ -992,10 +980,6 @@ int ArcaneArcherDamageDoneByBow(int bCrit = FALSE, object oUser = OBJECT_SELF)
     if (bSpec == TRUE)
     {
         nDamage +=2;
-    }
-    if ( bEpicSpecialization == TRUE )
-    {
-        nDamage +=4;
     }
     if (bCrit == TRUE)
     {
@@ -1942,4 +1926,5 @@ void spellsDispelAoE(object oTargetAoE, object oCaster, int nCasterLevel)
     }
 
 }
+
 

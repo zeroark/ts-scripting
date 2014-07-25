@@ -15,6 +15,7 @@
 //:://////////////////////////////////////////////
 //:: Created By: Brennon Holmes
 //:: Created On: Oct 12, 2000
+//:: Modified by: Shayan   27/03/2005 (For Subrace Engine) -Just recompiled with modified nw_i0_spells.nss
 //:://////////////////////////////////////////////
 //:: Update Pass By: Preston W, On: July 26, 2001
 
@@ -43,3 +44,4 @@ void main()
 
     spellsCure(d8(), 5, 8, VFX_IMP_SUNSTRIKE, VFX_IMP_HEALING_S, GetSpellId());
 }
+

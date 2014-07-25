@@ -8,6 +8,7 @@
 //:://////////////////////////////////////////////
 //:: Created By: Keith Soleski
 //:: Created On: Jan 18, 2001
+//:: Modified by: Shayan   27/03/2005 (For Subrace Engine)
 //:://////////////////////////////////////////////
 //:: VFX Pass By: Preston W, On: June 20, 2001
 //:: Update Pass By: Preston W, On: Aug 1, 2001
@@ -16,6 +17,7 @@
 
 #include "NW_I0_SPELLS"
 #include "x2_inc_spellhook"
+#include "sha_subr_methds"
 
 void main()
 {
@@ -46,7 +48,8 @@ void main()
     effect eVis2 = EffectVisualEffect(VFX_IMP_HEALING_G);
     effect eHeal, eDam;
     //Check that the target is undead
-    if (GetRacialType(oTarget) == RACIAL_TYPE_UNDEAD)
+    int IsUndead = Subrace_GetIsUndead(oTarget);
+    if (GetRacialType(oTarget) == RACIAL_TYPE_UNDEAD || IsUndead)
     {
         //Figure out the amount of damage to heal
         nHeal = GetMaxHitPoints(oTarget) - GetCurrentHitPoints(oTarget);

@@ -1,3 +1,11 @@
+//
+//:: Changed script so that spell restoration does not remove subracial bonus
+//:: ability changes.
+
+
+
+
+
 //::///////////////////////////////////////////////
 //:: [Ressurection]
 //:: [NW_S0_Ressurec.nss]
@@ -17,7 +25,14 @@
 //:: Last Updated By: Georg Z on 2003-07-31
 //:: VFX Pass By: Preston W, On: June 22, 2001
 
+// Jasperre:
+// - To make this operate effectivly, the AI that is, the PC speaks silently
+// when they are raised, to let NPC's get them :-P
+// This is not required, but is a simple addition.
+// - It also adds NPC re-targeting to get them back into combat.
+
 #include "x2_inc_spellhook"
+#include "sha_subr_methds"
 
 void main()
 {
@@ -57,6 +72,21 @@ void main()
             ApplyEffectToObject(DURATION_TYPE_INSTANT, eRaise, oTarget);
             ApplyEffectToObject(DURATION_TYPE_INSTANT, eHeal, oTarget);
             ApplyEffectAtLocation(DURATION_TYPE_INSTANT, eVis, GetLocation(oTarget));
+            // Jasperre's additions...
+            AssignCommand(oTarget, SpeakString("I AM ALIVE!", TALKVOLUME_SILENT_TALK));
+            if(!GetIsPC(oTarget) && !GetIsDMPossessed(oTarget))
+            {
+                // Default AI script
+                ExecuteScript("nw_c2_default3", oTarget);
+            }
+
+
+//-----------Modification made for Shayan's Subrace Engine
+            if(GetIsPC(oTarget))
+            {
+               ReapplySubraceAbilities(oTarget);
+            }
+//---------End Modification by Shayan
         }
         else
         {
@@ -75,3 +105,4 @@ void main()
         }
     }
 }
+

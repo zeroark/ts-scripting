@@ -11,8 +11,9 @@
 //:://////////////////////////////////////////////
 //:: Created By: Preston Watamaniuk
 //:: Created On: May 14, 2000
+//:: Modified by: Shayan   27/03/2005 (For Subrace Engine)
 //:://////////////////////////////////////////////
-
+#include "sha_subr_methds"
 void main()
 {
     //Declare major variables
@@ -36,7 +37,8 @@ void main()
             //Roll the amount to heal or damage
             nDamage = d4(nHD);
             //If the target is undead
-            if (GetRacialType(oTarget) == RACIAL_TYPE_UNDEAD)
+//---------------------------------------------------------------Shayan's Subrace Engine code
+            if (GetRacialType(oTarget) == RACIAL_TYPE_UNDEAD || Subrace_GetIsUndead(oTarget))
             {
                 //Make a faction check
                 if(GetIsFriend(oTarget))

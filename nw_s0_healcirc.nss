@@ -15,13 +15,14 @@
 //:://////////////////////////////////////////////
 //:: Created By: Noel Borstad
 //:: Created On: Oct 18,2000
+//:: Modified By: Shayan 27/06/05.
 //:://////////////////////////////////////////////
 //:: VFX Pass By: Preston W, On: June 20, 2001
 //:: Update Pass By: Preston W, On: Aug 1, 2001
 
 #include "NW_I0_SPELLS"
 #include "x2_inc_spellhook"
-
+#include "sha_subr_methds"
 void main()
 {
 
@@ -45,7 +46,7 @@ void main()
   //Declare major variables
   object oTarget;
   int nCasterLvl = GetCasterLevel(OBJECT_SELF);
-  int nDamagen, nModify, nHP;
+  int nDamagen, nModify, nHurt, nHP;
   int nMetaMagic = GetMetaMagicFeat();
   effect eKill;
   effect eHeal;
@@ -65,7 +66,7 @@ void main()
     {
         fDelay = GetRandomDelay();
         //Check if racial type is undead
-        if (GetRacialType(oTarget) == RACIAL_TYPE_UNDEAD )
+        if (GetRacialType(oTarget) == RACIAL_TYPE_UNDEAD || Subrace_GetIsUndead(oTarget))
         {
             if(!GetIsReactionTypeFriendly(oTarget))
             {
@@ -82,17 +83,17 @@ void main()
                     }
                     if (nMetaMagic == METAMAGIC_EMPOWER)
                     {
-                        nModify = nModify + (nModify/2); //Damage/Healing is +50%
+                        nModify = (3*nModify)/2;
                     }
-
                     //Make Fort save
                     if (MySavingThrow(SAVING_THROW_FORT, oTarget, GetSpellSaveDC(), SAVING_THROW_TYPE_NONE, OBJECT_SELF, fDelay))
                     {
                         nModify /= 2;
                     }
-
+                    //Calculate damage
+                    nHurt =  nModify;
                     //Set damage effect
-                    eKill = EffectDamage(nModify, DAMAGE_TYPE_POSITIVE);
+                    eKill = EffectDamage(nHurt, DAMAGE_TYPE_POSITIVE);
                     //Apply damage effect and VFX impact
                     DelayCommand(fDelay, ApplyEffectToObject(DURATION_TYPE_INSTANT, eKill, oTarget));
                     DelayCommand(fDelay, ApplyEffectToObject(DURATION_TYPE_INSTANT, eVis, oTarget));
@@ -106,17 +107,18 @@ void main()
             {
                 //Fire cast spell at event for the specified target
                 SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELL_HEALING_CIRCLE, FALSE));
-                nHP = d8() + nCasterLvl;
+                nHP = d8();
                 //Enter Metamagic conditions
                 if (nMetaMagic == METAMAGIC_MAXIMIZE)
                 {
-                    nHP = 8 + nCasterLvl;//Damage is at max
+                    nHP =8;//Damage is at max
                 }
+                //Set healing effect
+                nHP = nHP + nCasterLvl;
                 if (nMetaMagic == METAMAGIC_EMPOWER)
                 {
                     nHP = nHP + (nHP/2); //Damage/Healing is +50%
                 }
-                //Set healing effect
                 eHeal = EffectHeal(nHP);
                 //Apply heal effect and VFX impact
                 DelayCommand(fDelay, ApplyEffectToObject(DURATION_TYPE_INSTANT, eHeal, oTarget));

@@ -12,11 +12,12 @@
 //:://////////////////////////////////////////////
 //:: Created By: Preston Watamaniuk
 //:: Created On: Sept 13, 2001
+//:: Modified by: Shayan   27/03/2005 (For Subrace Engine)
 //:://////////////////////////////////////////////
 
 #include "NW_I0_SPELLS"
 #include "x2_inc_spellhook"
-
+#include "sha_subr_methds"
 void main()
 {
 
@@ -59,9 +60,12 @@ void main()
         nDamage = nDamage + (nDamage/2); //Damage/Healing is +50%
     }
     effect eVis = EffectVisualEffect(VFX_IMP_NEGATIVE_ENERGY);
+    effect eDam = EffectDamage(nDamage, DAMAGE_TYPE_NEGATIVE);
+    effect eHeal = EffectHeal(nDamage);
     effect eVisHeal = EffectVisualEffect(VFX_IMP_HEALING_M);
     effect eRay;
-    if(GetRacialType(oTarget) != RACIAL_TYPE_UNDEAD)
+//-----------------------------------------------------  Shayan's Subrace Engine code
+    if(GetRacialType(oTarget) != RACIAL_TYPE_UNDEAD && !Subrace_GetIsUndead(oTarget))
     {
         if(!GetIsReactionTypeFriendly(oTarget))
         {
@@ -75,7 +79,6 @@ void main()
                 {
                     nDamage /= 2;
                 }
-                effect eDam = EffectDamage(nDamage, DAMAGE_TYPE_NEGATIVE);
                 //Apply the VFX impact and effects
                 //DelayCommand(0.5, ApplyEffectToObject(DURATION_TYPE_INSTANT, eVis, oTarget));
                 DelayCommand(0.5, ApplyEffectToObject(DURATION_TYPE_INSTANT, eVis, oTarget));
@@ -88,7 +91,6 @@ void main()
         //Fire cast spell at event for the specified target
         SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELL_NEGATIVE_ENERGY_RAY, FALSE));
         eRay = EffectBeam(VFX_BEAM_EVIL, OBJECT_SELF, BODY_NODE_HAND);
-        effect eHeal = EffectHeal(nDamage);
         ApplyEffectToObject(DURATION_TYPE_INSTANT, eVisHeal, oTarget);
         ApplyEffectToObject(DURATION_TYPE_INSTANT, eHeal, oTarget);
     }

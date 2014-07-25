@@ -23,6 +23,7 @@
 //:://////////////////////////////////////////////
 
 #include "x2_inc_spellhook"
+#include "sha_subr_methds"
 
 void main()
 {
@@ -86,6 +87,14 @@ void main()
 
         //Apply the VFX impact and effects
         ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eLink, oTarget, HoursToSeconds(nDuration));
+        if(GetIsPCLightSensitive(oTarget) && GetIsPC(oTarget))
+        {
+          if(FortitudeSave(oTarget, LIGHT_SENSITIVE_SAVING_THROW_DC) == 0)
+          {
+               ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectBlindness(), oTarget, RoundsToSeconds(LIGHT_STRUCK_BLIND_FOR_ROUNDS));
+          }
+        }
     }
 
 }
+

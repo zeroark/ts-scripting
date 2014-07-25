@@ -11,11 +11,12 @@
 //:://////////////////////////////////////////////
 //:: Created By: Preston Watamaniuk
 //:: Created On: Sept 13, 2001
+//:: Modified by: Shayan   27/03/2005 (For Subrace Engine)
 //:://////////////////////////////////////////////
 
 #include "X0_I0_SPELLS"
 #include "x2_inc_spellhook"
-
+#include "sha_subr_methds"
 void main()
 {
 
@@ -41,7 +42,6 @@ void main()
     int nCasterLvl = GetCasterLevel(oCaster);
     int nMetaMagic = GetMetaMagicFeat();
     int nDamage;
-    int nAdditionalLevelDamage;
     float fDelay;
     effect eExplode = EffectVisualEffect(VFX_FNF_LOS_EVIL_20); //Replace with Negative Pulse
     effect eVis = EffectVisualEffect(VFX_IMP_NEGATIVE_ENERGY);
@@ -52,13 +52,6 @@ void main()
     {
         nStr = 1;
     }
-
-    nAdditionalLevelDamage = nCasterLvl;
-    if ( nAdditionalLevelDamage > 20 )
-    {
-       nAdditionalLevelDamage = 20;
-    }
-
     effect eStr = EffectAbilityIncrease(ABILITY_STRENGTH, nStr);
     effect eStr_Low = EffectAbilityDecrease(ABILITY_STRENGTH, nStr);
     effect eDur = EffectVisualEffect(VFX_DUR_CESSATE_POSITIVE);
@@ -79,11 +72,11 @@ void main()
        if(spellsIsTarget(oTarget, SPELL_TARGET_STANDARDHOSTILE, OBJECT_SELF))
        {
             //Roll damage for each target
-            nDamage = d8() + nAdditionalLevelDamage;
+            nDamage = d8() + nCasterLvl;
             //Resolve metamagic
             if (nMetaMagic == METAMAGIC_MAXIMIZE)
             {
-                nDamage = 8 + nAdditionalLevelDamage;
+                nDamage = 8 + nCasterLvl;
             }
                 else if (nMetaMagic == METAMAGIC_EMPOWER)
             {
@@ -97,7 +90,9 @@ void main()
             fDelay = GetDistanceBetweenLocations(lTarget, GetLocation(oTarget))/20;
 
             // * any undead should be healed, not just Friendlies
-            if (GetRacialType(oTarget) == RACIAL_TYPE_UNDEAD)
+
+//-------------------------------------------------------------Shayan's Subrace Engine code
+            if (GetRacialType(oTarget) == RACIAL_TYPE_UNDEAD || Subrace_GetIsUndead(oTarget))
             {
                 //Fire cast spell at event for the specified target
                 SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELL_NEGATIVE_ENERGY_BURST, FALSE));

@@ -1,3 +1,12 @@
+//
+//:: Changed script so that spell restoration does not remove subracial bonus
+//:: ability changes.
+
+
+
+
+
+
 //::///////////////////////////////////////////////
 //:: Greater Restoration
 //:: NW_S0_GrRestore.nss
@@ -74,9 +83,21 @@ void main()
             GetEffectType(eBad) == EFFECT_TYPE_STUNNED)
         {
             //Remove effect if it is negative.
-            if(!GetIsSupernaturalCurse(eBad))
-                RemoveEffect(oTarget, eBad);
+//------------>Modified for Shayan's Subrace Engine
+            //Remove effect if it is not subracial effect
+            if(GetEffectSubType(eBad) == SUBTYPE_SUPERNATURAL)
+            {
+                if(GetEffectCreator(eBad) != oTarget)
+                {
+                    RemoveEffect(oTarget, eBad);
+                }
+            }
+            else
+            {
+               RemoveEffect(oTarget, eBad);
+            }
         }
+//------------>End Modification.
         eBad = GetNextEffect(oTarget);
     }
     if(GetRacialType(oTarget) != RACIAL_TYPE_UNDEAD)

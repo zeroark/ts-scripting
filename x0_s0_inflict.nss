@@ -8,6 +8,7 @@
 //:://////////////////////////////////////////////
 //:: Created By: Brent
 //:: Created On: July 2002
+//:: Modified by: Shayan   16/06/2005 (For Subrace Engine) -Just recompiled with modified x0_i0_spells.nss
 //:://////////////////////////////////////////////
 //:: VFX Pass By:
 
@@ -23,7 +24,6 @@ void main()
   Added 2003-06-20 by Georg
   If you want to make changes to all spells,
   check x2_inc_spellhook.nss to find out more
-
 */
 
     if (!X2PreSpellCastCode())

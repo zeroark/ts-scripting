@@ -7,7 +7,11 @@
 //:: Created By: Preston Watamaniuk
 //:: Created On: Jan 2, 2002
 //:: Updated By: 2003/20/10 Georg Zoeller
+//:: Editteb by Shayan for SSE 14/10/2006 refer to Line 14, 164
 //:://////////////////////////////////////////////
+
+
+#include "sha_subr_methds"
 
 // GZ: Number of spells in GetSpellBreachProtections
 const int NW_I0_SPELLS_MAX_BREACH = 33;
@@ -158,7 +162,7 @@ void spellsCure(int nDamage, int nMaxExtraDamage, int nMaximized, int vfx_impact
     }
 
 
-    if (GetRacialType(oTarget) != RACIAL_TYPE_UNDEAD)
+    if (GetRacialType(oTarget) != RACIAL_TYPE_UNDEAD && !Subrace_GetIsUndead(oTarget))
     {
         //Figure out the amount of damage to heal
         //nHeal = nDamage;  -- this line seemed kinda pointless
@@ -851,3 +855,4 @@ void TrapDoElectricalDamage(int ngDamageMaster, int nSaveDC, int nSecondary)
         o2ndTarget = GetNextObjectInShape(SHAPE_SPHERE, RADIUS_SIZE_LARGE, lTarget);
     }
 }
+

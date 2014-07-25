@@ -9,10 +9,12 @@
 //:://////////////////////////////////////////////
 //:: Created By: Preston Watamaniuk
 //:: Created On: April 11, 2001
+//:: Modified by: Shayan   27/03/2005 (For Subrace Engine)
 //:://////////////////////////////////////////////
 
 #include "NW_I0_SPELLS"
 #include "x2_inc_spellhook"
+#include "sha_subr_methds"
 
 void main()
 {
@@ -52,8 +54,8 @@ void main()
   while(GetIsObjectValid(oTarget))
   {
       fDelay = GetRandomDelay();
-      //Check to see if the target is an undead
-      if (GetRacialType(oTarget) == RACIAL_TYPE_UNDEAD && !GetIsReactionTypeFriendly(oTarget))
+//-------Check to see if the target is an undead
+      if ((Subrace_GetIsUndead(oTarget) || GetRacialType(oTarget) == RACIAL_TYPE_UNDEAD) && !GetIsReactionTypeFriendly(oTarget))
       {
             //Fire cast spell at event for the specified target
             SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELL_MASS_HEAL));
@@ -61,7 +63,7 @@ void main()
             nTouch = TouchAttackRanged(oTarget);
             if (nTouch > 0)
             {
-                if(!GetIsReactionTypeFriendly(oTarget))
+                if(!GetIsReactionTypeFriendly(oTarget) || Subrace_GetIsUndead(oTarget))
                 {
                     //Make an SR check
                     if (!MyResistSpell(OBJECT_SELF, oTarget, fDelay))

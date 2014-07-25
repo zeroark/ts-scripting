@@ -1,3 +1,11 @@
+//
+//:: Changed script so that spell restoration does not remove subracial bonus
+//:: ability changes.
+
+
+
+
+
 //::///////////////////////////////////////////////
 //:: Restoration
 //:: NW_S0_Restore.nss
@@ -61,9 +69,21 @@ void main()
             GetEffectType(eBad) == EFFECT_TYPE_NEGATIVELEVEL)
             {
                 //Remove effect if it is negative.
-                if(!GetIsSupernaturalCurse(eBad))
-                    RemoveEffect(oTarget, eBad);
+//---------------->Modified for Shayan's Subrace Engine
+                //Remove effect if it is not subracial effect
+                if(GetEffectSubType(eBad) == SUBTYPE_SUPERNATURAL)
+                {
+                    if(GetEffectCreator(eBad) != oTarget)
+                    {
+                        RemoveEffect(oTarget, eBad);
+                    }
+                }
+                else
+                {
+                   RemoveEffect(oTarget, eBad);
+                }
             }
+//---------------->End Modification by Shayan.
         eBad = GetNextEffect(oTarget);
     }
     //Fire cast spell at event for the specified target
